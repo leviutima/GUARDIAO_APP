@@ -13,6 +13,7 @@ import br.com.fiap.guardiao_app.screens.AdicionarContato
 import br.com.fiap.guardiao_app.screens.CadastroScreen
 import br.com.fiap.guardiao_app.screens.ContactsScreen
 import br.com.fiap.guardiao_app.screens.HomeScreen
+import br.com.fiap.guardiao_app.screens.LocalizacaoScreen
 import br.com.fiap.guardiao_app.ui.theme.GUARDIAO_APPTheme
 
 class MainActivity : ComponentActivity() {
@@ -30,6 +31,7 @@ class MainActivity : ComponentActivity() {
                     composable(route = "Cadastro"){ CadastroScreen(navController = navController) }
                     composable(route = "Contatos"){ ContactsScreen(navController = navController) }
                     composable(route = "Adicionar"){ AdicionarContato(navController = navController) }
+                    composable(route = "Localizacao"){ LocalizacaoScreen(navController = navController)}
                 }
 
 
@@ -45,6 +47,5 @@ class MainActivity : ComponentActivity() {
 fun GreetingPreview() {
     GUARDIAO_APPTheme {
         HomeScreen(navController = rememberNavController())
-        CadastroScreen(navController = rememberNavController())
     }
 }

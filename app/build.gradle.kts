@@ -71,4 +71,5 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2")
     implementation ("io.coil-kt:coil-compose:1.4.0")
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
 }

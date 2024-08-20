@@ -6,12 +6,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -61,9 +64,8 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(70.dp)
-                .background(color = Color.White)
-                .align(Alignment.TopCenter)
-                .background(color = AzulRoyal),
+                .background(color = AzulRoyal)
+                .align(Alignment.TopCenter),
             contentAlignment = Alignment.Center
         ) {
             Image(
@@ -73,8 +75,8 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavController) {
             )
         }
 
-        // Corpo da página
-        Column(
+        // Corpo da página com rolagem
+        LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.TopCenter)
@@ -83,17 +85,26 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavController) {
                 .padding(32.dp),
             verticalArrangement = Arrangement.Top
         ) {
-            Input(name = "FIAP")
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(
-                text = "Principais notícias",
-                fontSize = 18.sp
-            )
+            item {
+                Input(name = "FIAP")
+                Spacer(modifier = Modifier.height(20.dp))
+                Row {
+                    Text(
+                        text = "Principais notícias",
+                        fontSize = 18.sp
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Image(
+                        painter = painterResource(id = R.drawable.noticias),
+                        contentDescription = "Globo de noticias",
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+            }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            articles.forEach { article ->
-                NewsItem(article = article)
+            items(articles.size) { index ->
+                NewsItem(article = articles[index])
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }

@@ -65,6 +65,7 @@ fun Footer(modifier: Modifier = Modifier, navController: NavController) {
                 modifier = Modifier
                     .size(62.dp)
                     .clickable {
+                        navController.navigate("Localizacao")
                     }
             )
             Icon(
