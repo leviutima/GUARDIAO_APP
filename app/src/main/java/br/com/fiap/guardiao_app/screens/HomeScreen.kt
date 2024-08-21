@@ -3,6 +3,7 @@ package br.com.fiap.guardiao_app.screens
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -40,12 +42,20 @@ import br.com.fiap.guardiao_app.components.Footer
 import br.com.fiap.guardiao_app.service.network.RetrofitInstance
 import br.com.fiap.guardiao_app.service.network.model.Article
 import coil.compose.rememberImagePainter
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import kotlinx.coroutines.launch
+
 
 val AzulRoyal = Color(0xFF6495ED)
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier, navController: NavController) {
     var articles by remember { mutableStateOf<List<Article>>(emptyList()) }
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
         val response = RetrofitInstance.api.getTopHeadlines(apiKey = "2ccdf4c678f84d599baf310036e51ba7")
@@ -55,67 +65,121 @@ fun HomeScreen(modifier: Modifier = Modifier, navController: NavController) {
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            DrawerContent(onItemClick = {
+                scope.launch { drawerState.close() }
+            })
+        }
     ) {
-        // Cabeçalho
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(70.dp)
-                .background(color = AzulRoyal)
-                .align(Alignment.TopCenter),
-            contentAlignment = Alignment.Center
+                .fillMaxSize()
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo guardião",
-                modifier = Modifier.size(100.dp),
+            // Cabeçalho
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(70.dp)
+                    .background(color = AzulRoyal)
+                    .align(Alignment.TopCenter)
+            ) {
+                // Linha que contém o ícone de Menu e a Logo
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // Ícone de Menu
+                    Icon(
+                        imageVector = Icons.Default.Menu,
+                        contentDescription = "Menu",
+                        modifier = Modifier
+                            .size(44.dp)
+                            .clickable {
+                                scope.launch { drawerState.open() }
+                            },
+                        tint = Color.White
+                    )
+
+                    // Logo
+                    Spacer(modifier = Modifier.weight(1f)) // Preenche o espaço à direita do ícone de menu
+                    Image(
+                        painter = painterResource(id = R.drawable.logo),
+                        contentDescription = "Logo guardião",
+                        modifier = Modifier
+                            .size(100.dp)
+                    )
+                    Spacer(modifier = Modifier.weight(1f)) // Preenche o espaço à esquerda da logo
+                }
+            }
+
+            // Corpo da página com rolagem
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter)
+                    .padding(top = 80.dp, bottom = 80.dp)
+                    .background(Color.White)
+                    .padding(32.dp),
+                verticalArrangement = Arrangement.Top
+            ) {
+                item {
+                    Input(name = "FIAP")
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Row {
+                        Text(
+                            text = "Principais notícias",
+                            fontSize = 18.sp
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Image(
+                            painter = painterResource(id = R.drawable.noticias),
+                            contentDescription = "Globo de noticias",
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
+                items(articles.size) { index ->
+                    NewsItem(article = articles[index])
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
+
+            // Rodapé
+            Footer(
+                navController = navController,
+                modifier = Modifier.align(Alignment.BottomCenter)
             )
         }
-
-        // Corpo da página com rolagem
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.TopCenter)
-                .padding(top = 80.dp, bottom = 80.dp)
-                .background(Color.White)
-                .padding(32.dp),
-            verticalArrangement = Arrangement.Top
-        ) {
-            item {
-                Input(name = "FIAP")
-                Spacer(modifier = Modifier.height(20.dp))
-                Row {
-                    Text(
-                        text = "Principais notícias",
-                        fontSize = 18.sp
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Image(
-                        painter = painterResource(id = R.drawable.noticias),
-                        contentDescription = "Globo de noticias",
-                        modifier = Modifier.size(28.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            items(articles.size) { index ->
-                NewsItem(article = articles[index])
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-        }
-
-        // Rodapé
-        Footer(
-            navController = navController,
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
     }
 }
+
+@Composable
+fun DrawerContent(onItemClick: () -> Unit) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        DrawerItem("Fale conosco", onItemClick)
+        DrawerItem("Chat", onItemClick)
+        DrawerItem("Denúncia", onItemClick)
+        DrawerItem("Ajuda", onItemClick)
+    }
+}
+
+@Composable
+fun DrawerItem(text: String, onClick: () -> Unit) {
+    Text(
+        text = text,
+        fontSize = 18.sp,
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+            .clickable { onClick() }
+    )
+}
+
 
 @Composable
 fun NewsItem(article: Article) {
