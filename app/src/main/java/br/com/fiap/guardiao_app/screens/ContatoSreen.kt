@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -28,17 +30,31 @@ fun ContactsHeader() {
         color = AzulRoyal,
         modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp)
-            .padding(0.dp) // Remove qualquer padding extra
+            .height(60.dp) // Ajuste a altura conforme necessário
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp), // Ajusta o padding horizontal
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween // Espaça a imagem e o texto
         ) {
+            // Imagem no canto superior esquerdo
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Logo",
+                modifier = Modifier.size(40.dp) // Ajuste o tamanho conforme necessário
+            )
+
+            // Texto centralizado
             Text(
-                text = "Contatos",
+                text = "Contato",
                 color = Color.White,
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier
+                    .weight(1f) // Faz o texto ocupar o espaço restante
+                    .align(Alignment.CenterVertically), // Centraliza verticalmente
+                textAlign = TextAlign.Center
             )
         }
     }
@@ -174,8 +190,6 @@ fun ContactsScreen(modifier: Modifier = Modifier, navController: NavController) 
         }
         Spacer(modifier = Modifier.weight(1f))
         Footer(navController = navController,
-                modifier = Modifier.fillMaxWidth())
+            modifier = Modifier.fillMaxWidth())
     }
 }
-
-
