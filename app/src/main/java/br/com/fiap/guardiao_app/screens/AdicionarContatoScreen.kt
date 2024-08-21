@@ -1,7 +1,10 @@
 package br.com.fiap.guardiao_app.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,10 +27,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import br.com.fiap.guardiao_app.R
 import br.com.fiap.guardiao_app.components.Footer
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.res.painterResource
+
 
 
 @Composable
@@ -65,20 +75,24 @@ fun AdicionarContato(modifier: Modifier = Modifier, navController: NavController
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.padding(16.dp))
-            
+
             Button(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.width(500.dp),
+                onClick = {
+                    // Navegar para a tela Home
+                    navController.navigate("home")
+                },
+                modifier = Modifier.fillMaxWidth(), // Ajustado para preencher a largura disponível
                 colors = ButtonDefaults.buttonColors(
                     containerColor = AzulRoyal
                 )
-                ) {
+            ) {
                 Text(
                     text = "Adicionar",
                     color = Color.White
                 )
             }
         }
+
 
         Footer(modifier = Modifier.fillMaxWidth(), navController = navController)
     }
@@ -90,17 +104,31 @@ fun AdicionarContatoHeader() {
         color = AzulRoyal,
         modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp)
-            .padding(0.dp)
+            .height(60.dp) // Ajuste a altura conforme necessário
     ) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp), // Ajusta o padding horizontal
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween // Espaça a imagem e o texto
         ) {
+            // Imagem no canto superior esquerdo
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Logo",
+                modifier = Modifier.size(40.dp) // Ajuste o tamanho conforme necessário
+            )
+
+            // Texto centralizado
             Text(
-                text = "Adicionar",
+                text = "Adicionar Cadastro",
                 color = Color.White,
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier
+                    .weight(1f) // Faz o texto ocupar o espaço restante
+                    .align(Alignment.CenterVertically), // Centraliza verticalmente
+                textAlign = TextAlign.Center
             )
         }
     }
